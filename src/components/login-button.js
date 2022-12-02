@@ -1,27 +1,38 @@
-import React from 'react'
-import { GoogleLogin } from 'react-google-login'
-
-const clientId = '177791728822-ev3lsu6blnaj5c8nmh16ldcm957rdofv.apps.googleusercontent.com';
+import React, { useContext } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
+import { UserContext } from "../Auth";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginButton() {
+  const userContext = useContext(UserContext);
+  const navigate = useNavigate();
+  const onSuccess = (credentialResponse) => {
+    const userData = jwt_decode(credentialResponse.credential);
+    userContext.setUser({
+      name: userData.name,
+      id: userData.sub,
+    });
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        name: userData.name,
+        id: userData.sub,
+      })
+    );
+    navigate("/dashboard");
+  };
 
-  const onSuccess = res => {
-    console.log("Login Success ! Current User : ",res.profileObj);
-  }
-
-  const onFailure = res => {
-    console.log("Login Failed ! Res : " + res);
-  }
+  const onFailure = (res) => {
+    console.log("Login Failed ! Res : ", res);
+  };
 
   return (
     <GoogleLogin
-        className='w-full p-2 flex justify-center items-center'
-        clientId={clientId}
-        buttonText="Sign in with Google"
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-        cookiePolicy={'single_host_origin'}
-        isSignedIn={true}
+      className="w-full p-2 flex justify-center items-center"
+      onSuccess={onSuccess}
+      onError={onFailure}
+      auto_select
     />
-  )
+  );
 }

@@ -16,7 +16,6 @@ function AppMap(props) {
   const [map, setMap] = useState(null);
 
   const onLoad = (map) => {
-    console.log(props.lat + ", " + props.lng);
     const bounds = new window.google.maps.LatLngBounds({ lat: props.lat, lng: props.lng });
     map.fitBounds(bounds);
     setMap(map);

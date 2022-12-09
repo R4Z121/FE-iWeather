@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -6,12 +7,20 @@ const containerStyle = {
   height: '100%'
 };
 
-const center = {
-  lat: -3.745,
-  lng: -38.523
-};
-
 function AppMap() {
+  const [center, setCenterMap] = useState({ lat: -6.176389, lng: 106.823037 });
+  const [setIsCenterLoaded] = useState(false)
+
+  useEffect(() => {
+    getUserPosition();
+  }, []);
+
+  const getUserPosition = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude });
+    });
+  }
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0"
@@ -19,25 +28,25 @@ function AppMap() {
 
   const [map, setMap] = useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = (map) => {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
     setMap(map);
-  }, []);
+  };
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = function callback(map) {
     setMap(null)
-  }, []);
+  };
 
   return isLoaded ? (
     <div className='w-full bg-app-grey min-h-30' id='map'>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-        ></GoogleMap>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={10}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        center={{ lat: center.lat, lng: center.lng }}
+      ></GoogleMap>
     </div>
   ) : <></>
 }

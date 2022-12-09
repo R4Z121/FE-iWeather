@@ -19,7 +19,7 @@ export default function Dashboard() {
   return (
     <React.Fragment>
       <AppBar></AppBar>
-      <main className="w-full flex flex-col p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
+      <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
         <section className="w-full flex flex-col gap-5">
           <WeatherInfo></WeatherInfo>
           <AppMap></AppMap>

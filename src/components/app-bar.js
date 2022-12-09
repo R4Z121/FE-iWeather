@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchBar from './search-bar'
+import { googleLogout } from '@react-oauth/google';
+import { UserContext } from '../Auth';
 
 export default function AppBar() {
-  const [isNavbarActive,setIsNavbarActive] = useState(false);
+  const [isNavbarActive, setIsNavbarActive] = useState(false);
   const burgerClick = () => {
     setIsNavbarActive(!isNavbarActive);
   }
@@ -12,6 +14,17 @@ export default function AppBar() {
       burgerClick();
     }
   }
+
+  const userContext = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    localStorage.removeItem('user');
+    userContext.user = null;
+    googleLogout();
+    navigate("/");
+  }
+
   return (
     <header className='flex flex-col sm:flex-row sm:justify-between sm:items-center flex-wrap w-full'>
       <section className='w-full sm:w-fit flex justify-between p-5 lg:order-1'>
@@ -28,7 +41,7 @@ export default function AppBar() {
         <nav className='w-full sm:w-fit flex flex-col p-2 pb-4 sm:p-3 sm:flex-row'>
           <Link to='./' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>Dashboard</Link>
           <Link to='./MyReports' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>My Reports</Link>
-          <Link to='./Log Out' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>Log Out</Link>
+          <span className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`} role='button' aria-label='Log Out' onClick={logOut}>Log Out</span>
         </nav>
       </section>
       <section className='w-full md:max-w-xl lg:order-2 lg:w-30 p-5'>

@@ -29,10 +29,12 @@ export default function LoginButton() {
 
   return (
     <GoogleLogin
-      className="w-full p-2 flex justify-center items-center"
+      type='standard'
+      size='medium'
       onSuccess={onSuccess}
       onError={onFailure}
-      auto_select
+      text='signin_with'
+      useOneTap
     />
   );
 }

@@ -11,25 +11,18 @@ Geocode.setLocationType("ROOFTOP");
 export default function WeatherInfo(props) {
   Geocode.fromLatLng(props.lat, props.lng).then(
     (response) => {
-      const address = response.results[0].formatted_address;
-      let city, state, country;
-      for (let i = 0; i < response.results[0].address_components.length; i++) {
-        for (let j = 0; j < response.results[0].address_components[i].types.length; j++) {
-          switch (response.results[0].address_components[i].types[j]) {
-            case "locality":
-              city = response.results[0].address_components[i].long_name;
-              break;
-            case "administrative_area_level_1":
-              state = response.results[0].address_components[i].long_name;
-              break;
-            case "country":
-              country = response.results[0].address_components[i].long_name;
-              break;
-          }
-        }
-      }
-      console.log(city, state, country);
-      console.log(address);
+      //const address = response.results[0].formatted_address;
+      let street, route, regency, city, state, country; 
+      
+      street = response.results[0].address_components[0].long_name;
+      route = response.results[0].address_components[1].long_name;
+      regency = response.results[0].address_components[2].long_name;
+      city = response.results[0].address_components[3].long_name;
+      state = response.results[0].address_components[4].long_name;
+      country = response.results[0].address_components[5].long_name;
+
+      document.getElementById("lokasi").innerHTML = street+", "+regency+", "+ state ;
+
     },
     (error) => {
       console.error(error);
@@ -40,7 +33,7 @@ export default function WeatherInfo(props) {
       id="card"
       className="flex justify-between rounded-md p-3 sm:p-5 bg-app-black text-white gap-3"
     >
-      <h1 className="text-base sm:text-xl font-bold">Address, Location</h1>
+      <h1 className="text-base sm:text-xl font-bold" id="lokasi">Address, Location</h1>
       <div className="flex gap-1">
         <img
           src={`${process.env.PUBLIC_URL}/img/clear.png`}

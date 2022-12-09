@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppBar from "../components/app-bar";
 import WeatherInfo from "../components/weather-info";
 import AppMap from "../components/app-map";
@@ -16,13 +16,23 @@ export default function Dashboard() {
     }
   }, [userContext.user, navigate]);
 
+  const [center, setCenterMap] = useState({ lat: -6.176389, lng: 106.823037 });
+  const getUserPosition = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude });
+    });
+  }
+  useEffect(() => {
+    getUserPosition();
+  }, []);
+
   return (
     <React.Fragment>
       <AppBar></AppBar>
       <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
         <section className="w-full flex flex-col gap-5">
-          <WeatherInfo></WeatherInfo>
-          <AppMap></AppMap>
+          <WeatherInfo lat={center.lat} lng={center.lng}></WeatherInfo>
+          <AppMap lat={center.lat} lng={center.lng}></AppMap>
         </section>
         <section className="w-full bg-app-grey">
           <div className="section-header w-full flex flex-col items-center p-4">

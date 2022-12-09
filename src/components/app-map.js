@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -7,20 +7,7 @@ const containerStyle = {
   height: '100%'
 };
 
-function AppMap() {
-  const [center, setCenterMap] = useState({ lat: -6.176389, lng: 106.823037 });
-  const [setIsCenterLoaded] = useState(false)
-
-  useEffect(() => {
-    getUserPosition();
-  }, []);
-
-  const getUserPosition = () => {
-    navigator.geolocation.getCurrentPosition(position => {
-      setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude });
-    });
-  }
-
+function AppMap(props) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0"
@@ -29,7 +16,8 @@ function AppMap() {
   const [map, setMap] = useState(null);
 
   const onLoad = (map) => {
-    const bounds = new window.google.maps.LatLngBounds(center);
+    console.log(props.lat + ", " + props.lng);
+    const bounds = new window.google.maps.LatLngBounds({ lat: props.lat, lng: props.lng });
     map.fitBounds(bounds);
     setMap(map);
   };
@@ -45,7 +33,7 @@ function AppMap() {
         zoom={10}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        center={{ lat: center.lat, lng: center.lng }}
+        center={{ lat: props.lat, lng: props.lng }}
       ></GoogleMap>
     </div>
   ) : <></>

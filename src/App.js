@@ -15,7 +15,6 @@ function App() {
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
-      console.log(JSON.parse(userData));
       userContext.setUser(JSON.parse(userData));
     }
   }, []);

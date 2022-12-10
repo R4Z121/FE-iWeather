@@ -6,6 +6,12 @@ import WeatherCard from "../components/weather-card";
 import AppFooter from "../components/app-footer";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth";
+import Geocode from "react-geocode";
+
+Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
+Geocode.setLanguage("id");
+Geocode.setRegion("id");
+Geocode.setLocationType("ROOFTOP");
 
 export default function Dashboard() {
   const userContext = useContext(UserContext);
@@ -26,12 +32,25 @@ export default function Dashboard() {
     getUserPosition();
   }, []);
 
+  const searchLocation = address => {
+    Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        setCenterMap({ lat: lat, lng: lng });
+      },
+      (error) => {
+        alert('Lokasi tidak ditemukan');
+        getUserPosition();
+      }
+    );
+  }
+
   return (
     <React.Fragment>
-      <AppBar></AppBar>
+      <AppBar searchHandler={searchLocation}></AppBar>
       <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
         <section className="w-full flex flex-col gap-5">
-          <WeatherInfo lat={center.lat} lng={center.lng}></WeatherInfo>
+          <WeatherInfo geocode={Geocode} lat={center.lat} lng={center.lng}></WeatherInfo>
           <AppMap lat={center.lat} lng={center.lng}></AppMap>
         </section>
         <section className="w-full bg-app-grey">

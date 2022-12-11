@@ -7,8 +7,8 @@ import AppFooter from "../components/app-footer";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth";
 import Geocode from "react-geocode";
-import {db} from "../firebase-config";
-import {collection, getDocs} from "firebase/firestore"; 
+import { db } from "../firebase-config";
+import { collection, getDocs } from "@firebase/firestore";
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
 Geocode.setLanguage("id");
@@ -16,34 +16,21 @@ Geocode.setRegion("id");
 Geocode.setLocationType("ROOFTOP");
 
 export default function Dashboard() {
-  
+
   //start here
-  const [users, setUsers] = useState([]);
   const [info, setInformation] = useState([]);
   const usersCollectionRef = collection(db, "weather-report");
- 
-  // const info = {
-  //   reportedUser: 'pudidi',
-  //   address: 'palembang',
-  //   weather: 'heavy_rain',
-  //   temperatures: '16',
-  //   reportedDate: '2022-12-6',
-  //   reportedTime: '10:10:10'
-  // }
-  
-  useEffect(()=>{
-    
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setInformation(data.docs.map((doc)=> ({...doc.data(), id:doc.id })));
-    }
 
+  const getUsers = async () => {
+    const data = await getDocs(usersCollectionRef);
+    const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    setInformation(users);
+    return users;
+  };
+
+  useEffect(() => {
     getUsers();
   }, []);
-
-  {info.forEach(data => {
-    <WeatherCard> info={data} </WeatherCard>
-  })}
   //done here
 
   const userContext = useContext(UserContext);
@@ -85,16 +72,14 @@ export default function Dashboard() {
           <WeatherInfo geocode={Geocode} lat={center.lat} lng={center.lng}></WeatherInfo>
           <AppMap lat={center.lat} lng={center.lng} isMarkerShown></AppMap>
         </section>
-        <section className="w-full bg-app-grey">
-          <div className="section-header w-full flex flex-col items-center p-4">
+        <section className="w-full bg-app-lime">
+          <div className="section-header bg-app-grey w-full flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold">Latest Report</h1>
           </div>
-          <div className="section-body w-full bg-app-lime p-5 flex flex-col gap-3">
-            <WeatherCard info={info}></WeatherCard>
-            <WeatherCard info={info}></WeatherCard>
-            <WeatherCard info={info}></WeatherCard>
-            <WeatherCard info={info}></WeatherCard>
-            <WeatherCard info={info}></WeatherCard>
+          <div className="section-body w-full p-5 flex flex-col gap-3">
+            {
+              info.map((data, index) => <WeatherCard key={index} info={data}></WeatherCard>)
+            }
           </div>
         </section>
       </main>

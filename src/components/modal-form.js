@@ -76,9 +76,9 @@ export default function ModalForm(props) {
 					<select className='bg-app-grey p-3' name="condition" id="condition">
 						<option value="clear">Clear</option>
 						<option value="cloudy">Cloudy</option>
-						<option value="lightRain">Light Rain</option>
-						<option value="heavyRain">Heavy Rain</option>
-						<option value="Storm">Storm</option>
+						<option value="light_rain">Light Rain</option>
+						<option value="heavy_rain">Heavy Rain</option>
+						<option value="storm">Storm</option>
 					</select>
 				</div>
 				<div className="flex flex-col gap-3 w-full items-center">

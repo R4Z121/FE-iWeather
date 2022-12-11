@@ -25,7 +25,11 @@ module.exports = {
         'app-lime': '#CDF986'
       },
       minHeight: {
-        '30': '480px'
+        '30': '480px',
+        'app-main': 'calc(100vh - 74px - 32px)'
+      },
+      minWidth: {
+        '16': '56px'
       }
     },
   },

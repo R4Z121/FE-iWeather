@@ -14,6 +14,16 @@ Geocode.setRegion("id");
 Geocode.setLocationType("ROOFTOP");
 
 export default function Dashboard() {
+
+  const info = {
+    reportedUser: 'Unknown',
+    address: 'West Midlands, Brighton',
+    weather: 'heavy_rain',
+    temperatures: '16',
+    reportedDate: '2022-12-6',
+    reportedTime: '14:53:23'
+  }
+
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,22 +57,22 @@ export default function Dashboard() {
 
   return (
     <React.Fragment>
-      <AppBar searchHandler={searchLocation}></AppBar>
+      <AppBar searchHandler={searchLocation} isSearchBarShown></AppBar>
       <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
         <section className="w-full flex flex-col gap-5">
           <WeatherInfo geocode={Geocode} lat={center.lat} lng={center.lng}></WeatherInfo>
-          <AppMap lat={center.lat} lng={center.lng}></AppMap>
+          <AppMap lat={center.lat} lng={center.lng} isMarkerShown></AppMap>
         </section>
         <section className="w-full bg-app-grey">
           <div className="section-header w-full flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold">Latest Report</h1>
           </div>
           <div className="section-body w-full bg-app-lime p-5 flex flex-col gap-3">
-            <WeatherCard></WeatherCard>
-            <WeatherCard></WeatherCard>
-            <WeatherCard></WeatherCard>
-            <WeatherCard></WeatherCard>
-            <WeatherCard></WeatherCard>
+            <WeatherCard info={info}></WeatherCard>
+            <WeatherCard info={info}></WeatherCard>
+            <WeatherCard info={info}></WeatherCard>
+            <WeatherCard info={info}></WeatherCard>
+            <WeatherCard info={info}></WeatherCard>
           </div>
         </section>
       </main>

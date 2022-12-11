@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
-import UserReport from "./pages/userReport";
+import MyReports from "./pages/myReports";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserContext } from "./Auth";
 
@@ -22,9 +22,9 @@ function App() {
     <GoogleOAuthProvider clientId={clientId}>
       <React.Fragment>
         <Routes>
-          <Route path="/" element={<Login></Login>} />
-          <Route path="/dashboard" element={<Dashboard></Dashboard>} />
-          <Route path="/myreports" element={<UserReport></UserReport>} />
+          <Route exact path="/" element={<Login></Login>} />
+          <Route exact path="/dashboard" element={<Dashboard></Dashboard>} />
+          <Route exact path="/myReports" element={<MyReports></MyReports>} />
         </Routes>
       </React.Fragment>
     </GoogleOAuthProvider>

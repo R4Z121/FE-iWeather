@@ -26,10 +26,6 @@ export default function AppBar(props) {
     navigate("/");
   }
 
-  // const searchKeyDownHandler = () => {
-
-  // }
-
   return (
     <header className='flex flex-col sm:flex-row sm:justify-between sm:items-center flex-wrap w-full'>
       <section className='w-full sm:w-fit flex justify-between p-5 lg:order-1'>
@@ -44,12 +40,12 @@ export default function AppBar(props) {
       </section>
       <section className={`w-full ${isNavbarActive ? 'h-13' : 'h-0'} overflow-hidden transition-height duration-150 sm:h-auto sm:w-fit lg:order-3`}>
         <nav className='w-full sm:w-fit flex flex-col p-2 pb-4 sm:p-3 sm:flex-row'>
-          <Link to='./' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>Dashboard</Link>
-          <Link to='./MyReports' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>My Reports</Link>
+          <Link to='/Dashboard' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>Dashboard</Link>
+          <Link to='/MyReports' className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`}>My Reports</Link>
           <span className={`w-fit p-5 ${isNavbarActive ? 'visible' : 'invisible'} sm:visible`} role='button' aria-label='Log Out' onClick={logOut}>Log Out</span>
         </nav>
       </section>
-      <section className='w-full md:max-w-xl lg:order-2 lg:w-30 p-5'>
+      <section className={`w-full md:max-w-xl lg:order-2 lg:w-30 p-5 ${props.isSearchBarShown ? 'block' : 'hidden'}`}>
         <form className='bg-app-grey-2 rounded-sm overflow-hidden flex w-full' onSubmit={(e) => {
           e.preventDefault()
           if (enterSearch.trim().length <= 0) {

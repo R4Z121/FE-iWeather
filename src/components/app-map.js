@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
@@ -40,7 +39,9 @@ function AppMap(props) {
         zoom={10}
         onLoad={onLoad}
         onUnmount={onUnmount}
-      ></GoogleMap>
+      >
+        {props.isMarkerShown && <Marker position={{ lat: props.lat, lng: props.lng }} />}
+      </GoogleMap>
     </div>
   ) : <></>
 }

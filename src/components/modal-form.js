@@ -2,6 +2,9 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Geocode from "react-geocode";
+import {db} from "../firebase-config";
+import {collection, addDoc} from "firebase/firestore"; 
+import { async } from '@firebase/util';
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
 Geocode.setLanguage("id");
@@ -13,6 +16,14 @@ export default function ModalForm(props) {
 	const [userId, setUserId] = useState("");
 	const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
 	const [locationAddress, setLocationAddress] = useState('');
+	const [latitude, setLatitude] = useState("");
+	const [longtitude, setLongtitude] = useState("");
+	const [weather, setWeather] = useState("");
+	const [temperature, setTemperature] = useState();
+	const [reportedDate, setReportedDate] = useState("");
+	const [reportedTime, setReportedTime] = useState("");
+	
+	const usersCollectionRef = collection(db, "weather-report");
 
 	const getUserPosition = () => {
 		navigator.geolocation.getCurrentPosition(position => {
@@ -35,6 +46,20 @@ export default function ModalForm(props) {
 			setLocationAddress(`${street}, ${route}, ${regency}, ${state}`);
 		}
 	);
+	
+	const createReport = async () => {
+		await addDoc(usersCollectionRef, {
+			username: username,
+			userId: userId,
+			locationAddr:locationAddress,
+			latitude: latitude,
+			longtitude:longtitude, 
+			weather: weather,
+			temperature:temperature,
+			reportedDate:reportedDate,
+			reportedTime:reportedTime
+		})
+	}
 
 	useEffect(() => {
 		getUserPosition();
@@ -59,6 +84,9 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userId}
 						readOnly
+						onChange={(event) => 
+							{setUserId(event.target.value)
+						}}
 					/>
 					<input
 						type="hidden"
@@ -66,6 +94,9 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userLocation.lat}
 						readOnly
+						onChange={(event) => 
+							{setLatitude(event.target.value)
+						}}
 					/>
 					<input
 						type="hidden"
@@ -73,6 +104,9 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userLocation.lng}
 						readOnly
+						onChange={(event) => 
+							{setLongtitude(event.target.value)
+						}}
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -83,6 +117,9 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={username}
 						readOnly
+						onChange={(event) => 
+							{setUsername(event.target.value)
+						}}
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -93,6 +130,9 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={`${locationAddress}`}
 						readOnly
+						onChange={(event) => 
+							{setLocationAddress(event.target.value)
+						}}
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -101,26 +141,33 @@ export default function ModalForm(props) {
 						type="number"
 						id="temperature"
 						className="p-2 outline-none bg-app-grey-2"
+						onChange={(event) => 
+							{setTemperature(event.target.value)
+						}}
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
 					<label htmlFor="location">Weather Situation</label>
-					<select className='bg-app-grey p-3' name="condition" id="condition">
+					<select className='bg-app-grey p-3' name="condition" id="condition"
+						onChange={(event)=>{
+						setWeather(event.target.value)}}
+					>
+						<option>--Pilih Cuaca--</option>
 						<option value="clear">Clear</option>
 						<option value="cloudy">Cloudy</option>
-						<option value="light_rain">Light Rain</option>
+						<option value="light_rain">Light Rain</option>					
 						<option value="heavy_rain">Heavy Rain</option>
 						<option value="storm">Storm</option>
 					</select>
 				</div>
 				<div className="flex flex-col gap-3 w-full items-center">
-					<div
+					<button
 						className="w-full p-3 bg-app-black text-white font-bold text-center mt-6 cursor-pointer"
 						role="button"
 						aria-label="Sign In"
-					>
+						onClick={createReport}>
 						Report Situation
-					</div>
+					</button>
 				</div>
 			</div>
 		</form>

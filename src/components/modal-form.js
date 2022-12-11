@@ -14,10 +14,10 @@ Geocode.setLocationType("ROOFTOP");
 export default function ModalForm(props) {
 	const [username, setUsername] = useState("");
 	const [userId, setUserId] = useState("");
-	const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
+	const [userLocation, setUserLocation] = useState({ lat: -6.176389, lng: 106.823037 });
 	const [locationAddress, setLocationAddress] = useState('');
-	const [latitude, setLatitude] = useState("");
-	const [longtitude, setLongtitude] = useState("");
+	const [latitude, setLatitude] = useState(Number);
+	const [longtitude, setLongtitude] = useState(Number);
 	const [weather, setWeather] = useState("");
 	const [temperature, setTemperature] = useState();
 	const [reportedDate, setReportedDate] = useState("");
@@ -37,6 +37,8 @@ export default function ModalForm(props) {
 	}
 	Geocode.fromLatLng(userLocation.lat, userLocation.lng).then(
 		(response) => {
+			setLatitude(userLocation.lat)
+			setLongtitude(userLocation.lng)
 			const [
 				{ long_name: street },
 				{ long_name: route },
@@ -47,6 +49,15 @@ export default function ModalForm(props) {
 		}
 	);
 	
+	const setReported = ()=>{
+		var timeStamp= Date.now();
+		const dateFormat= new Date(timeStamp);
+		const tanggal = dateFormat.getDate()+"-"+(dateFormat.getMonth()+1)+"-"+dateFormat.getFullYear()
+		const jam = dateFormat.getHours() + ":" + dateFormat.getMinutes()+":"+dateFormat.getSeconds();
+		setReportedDate(tanggal);
+		setReportedTime(jam);
+	}
+
 	const createReport = async () => {
 		await addDoc(usersCollectionRef, {
 			username: username,
@@ -59,9 +70,12 @@ export default function ModalForm(props) {
 			reportedDate:reportedDate,
 			reportedTime:reportedTime
 		})
+
+		//console.log(username, userId, locationAddress, latitude, longtitude, temperature, weather, reportedDate, reportedTime);
 	}
 
 	useEffect(() => {
+		setReported();
 		getUserPosition();
 		getUserData();
 	}, []);
@@ -72,7 +86,8 @@ export default function ModalForm(props) {
 	}
 
 	return (
-		<form action="" className="flex flex-col items-center p-8 w-full max-w-md bg-app-grey-3 gap-8 fixed z-20">
+		<form action="" className="flex flex-col items-center p-8 w-full max-w-md bg-app-grey-3 gap-8 fixed z-20"onSubmit={(e) => {
+			e.preventDefault()}}>
 			<div className='w-full p-1 flex justify-end absolute top-3 right-4'>
 				<p className='text-xl text-red-500 font-bold cursor-pointer' onClick={closeModalButtonHandler}>x</p>
 			</div>
@@ -84,9 +99,6 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userId}
 						readOnly
-						onChange={(event) => 
-							{setUserId(event.target.value)
-						}}
 					/>
 					<input
 						type="hidden"
@@ -94,9 +106,6 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userLocation.lat}
 						readOnly
-						onChange={(event) => 
-							{setLatitude(event.target.value)
-						}}
 					/>
 					<input
 						type="hidden"
@@ -104,9 +113,7 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userLocation.lng}
 						readOnly
-						onChange={(event) => 
-							{setLongtitude(event.target.value)
-						}}
+	
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -117,9 +124,7 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={username}
 						readOnly
-						onChange={(event) => 
-							{setUsername(event.target.value)
-						}}
+						
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">

@@ -6,14 +6,14 @@ import { getFirestore } from '@firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyByHxmEsaK1TTuy-rxbw1MFqkGnLhyHaI4",
-    authDomain: "project-sig-e8a01.firebaseapp.com",
-    projectId: "project-sig-e8a01",
-    storageBucket: "project-sig-e8a01.appspot.com",
-    messagingSenderId: "938685941854",
-    appId: "1:938685941854:web:a24db7ecbca6440943cccf"
-}  
-
+    apiKey: "AIzaSyDvzXZlPU26YZWj0VjTbJzUmIQK15wtT1w",
+    authDomain: "be-iweather.firebaseapp.com",
+    projectId: "be-iweather",
+    storageBucket: "be-iweather.appspot.com",
+    messagingSenderId: "323631957402",
+    appId: "1:323631957402:web:59357e3e1f8aa54d84a623"
+};
+  
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);

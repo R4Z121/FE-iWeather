@@ -7,6 +7,8 @@ import AppFooter from "../components/app-footer";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth";
 import Geocode from "react-geocode";
+import {db} from "../firebase-config";
+import {collection, getDocs} from "firebase/firestore"; 
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
 Geocode.setLanguage("id");
@@ -14,15 +16,35 @@ Geocode.setRegion("id");
 Geocode.setLocationType("ROOFTOP");
 
 export default function Dashboard() {
+  
+  //start here
+  const [users, setUsers] = useState([]);
+  const [info, setInformation] = useState([]);
+  const usersCollectionRef = collection(db, "weather-report");
+ 
+  // const info = {
+  //   reportedUser: 'pudidi',
+  //   address: 'palembang',
+  //   weather: 'heavy_rain',
+  //   temperatures: '16',
+  //   reportedDate: '2022-12-6',
+  //   reportedTime: '10:10:10'
+  // }
+  
+  useEffect(()=>{
+    
+    const getUsers = async () => {
+      const data = await getDocs(usersCollectionRef);
+      setInformation(data.docs.map((doc)=> ({...doc.data(), id:doc.id })));
+    }
 
-  const info = {
-    reportedUser: 'Unknown',
-    address: 'West Midlands, Brighton',
-    weather: 'heavy_rain',
-    temperatures: '16',
-    reportedDate: '2022-12-6',
-    reportedTime: '14:53:23'
-  }
+    getUsers();
+  }, []);
+
+  {info.forEach(data => {
+    <WeatherCard> info={data} </WeatherCard>
+  })}
+  //done here
 
   const userContext = useContext(UserContext);
   const navigate = useNavigate();

@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  });
   //done here
 
   const userContext = useContext(UserContext);

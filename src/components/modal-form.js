@@ -1,11 +1,18 @@
 import React from 'react'
 import { useEffect } from 'react';
-import { useState } from 'react'
+import { useState } from 'react';
+import Geocode from "react-geocode";
+
+Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
+Geocode.setLanguage("id");
+Geocode.setRegion("id");
+Geocode.setLocationType("ROOFTOP");
 
 export default function ModalForm(props) {
 	const [username, setUsername] = useState("");
 	const [userId, setUserId] = useState("");
 	const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
+	const [locationAddress, setLocationAddress] = useState('');
 
 	const getUserPosition = () => {
 		navigator.geolocation.getCurrentPosition(position => {
@@ -17,6 +24,17 @@ export default function ModalForm(props) {
 		setUsername(userData.name);
 		setUserId(userData.id)
 	}
+	Geocode.fromLatLng(userLocation.lat, userLocation.lng).then(
+		(response) => {
+			const [
+				{ long_name: street },
+				{ long_name: route },
+				{ long_name: regency }, ,
+				{ long_name: state }
+			] = response.results[0].address_components
+			setLocationAddress(`${street}, ${route}, ${regency}, ${state}`);
+		}
+	);
 
 	useEffect(() => {
 		getUserPosition();
@@ -42,6 +60,20 @@ export default function ModalForm(props) {
 						value={userId}
 						readOnly
 					/>
+					<input
+						type="hidden"
+						id="latitude"
+						className="p-2 outline-none bg-app-grey-2"
+						value={userLocation.lat}
+						readOnly
+					/>
+					<input
+						type="hidden"
+						id="longtitude"
+						className="p-2 outline-none bg-app-grey-2"
+						value={userLocation.lng}
+						readOnly
+					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
 					<label htmlFor="username">Username</label>
@@ -59,7 +91,7 @@ export default function ModalForm(props) {
 						type="text"
 						id="location"
 						className="p-2 outline-none bg-app-grey-2"
-						value={`${userLocation.lat}, ${userLocation.lng}`}
+						value={`${locationAddress}`}
 						readOnly
 					/>
 				</div>

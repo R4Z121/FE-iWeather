@@ -7,6 +7,9 @@ import ModalForm from '../components/modal-form'
 export default function MyReports() {
   const [isModalShown, setIsModalShown] = useState(false);
 
+  //get reports from user with userID = userID in localStorage
+  const { id: userId } = JSON.parse(localStorage.getItem('user'));
+  //select * from weatherReport where userID = userId;
   const info = {
     reportedUser: 'Unknown',
     address: 'West Midlands, Brighton',

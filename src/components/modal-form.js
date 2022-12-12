@@ -2,9 +2,9 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Geocode from "react-geocode";
-import {db} from "../firebase-config";
-import {collection, addDoc} from "firebase/firestore"; 
-import { async } from '@firebase/util';
+import { db } from "../firebase-config";
+import { collection, addDoc } from "@firebase/firestore";
+// import { async } from '@firebase/util';
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
 Geocode.setLanguage("id");
@@ -22,7 +22,7 @@ export default function ModalForm(props) {
 	const [temperature, setTemperature] = useState();
 	const [reportedDate, setReportedDate] = useState("");
 	const [reportedTime, setReportedTime] = useState("");
-	
+
 	const usersCollectionRef = collection(db, "weather-report");
 
 	const getUserPosition = () => {
@@ -48,12 +48,12 @@ export default function ModalForm(props) {
 			setLocationAddress(`${street}, ${route}, ${regency}, ${state}`);
 		}
 	);
-	
-	const setReported = ()=>{
-		var timeStamp= Date.now();
-		const dateFormat= new Date(timeStamp);
-		const tanggal = dateFormat.getDate()+"-"+(dateFormat.getMonth()+1)+"-"+dateFormat.getFullYear()
-		const jam = dateFormat.getHours() + ":" + dateFormat.getMinutes()+":"+dateFormat.getSeconds();
+
+	const setReported = () => {
+		var timeStamp = Date.now();
+		const dateFormat = new Date(timeStamp);
+		const tanggal = dateFormat.getDate() + "-" + (dateFormat.getMonth() + 1) + "-" + dateFormat.getFullYear()
+		const jam = dateFormat.getHours() + ":" + dateFormat.getMinutes() + ":" + dateFormat.getSeconds();
 		setReportedDate(tanggal);
 		setReportedTime(jam);
 	}
@@ -62,13 +62,13 @@ export default function ModalForm(props) {
 		await addDoc(usersCollectionRef, {
 			username: username,
 			userId: userId,
-			locationAddr:locationAddress,
+			locationAddr: locationAddress,
 			latitude: latitude,
-			longtitude:longtitude, 
+			longtitude: longtitude,
 			weather: weather,
-			temperature:temperature,
-			reportedDate:reportedDate,
-			reportedTime:reportedTime
+			temperature: temperature,
+			reportedDate: reportedDate,
+			reportedTime: reportedTime
 		})
 
 		//console.log(username, userId, locationAddress, latitude, longtitude, temperature, weather, reportedDate, reportedTime);
@@ -86,8 +86,9 @@ export default function ModalForm(props) {
 	}
 
 	return (
-		<form action="" className="flex flex-col items-center p-8 w-full max-w-md bg-app-grey-3 gap-8 fixed z-20"onSubmit={(e) => {
-			e.preventDefault()}}>
+		<form action="" className="flex flex-col items-center p-8 w-full max-w-md bg-app-grey-3 gap-8 fixed z-20" onSubmit={(e) => {
+			e.preventDefault()
+		}}>
 			<div className='w-full p-1 flex justify-end absolute top-3 right-4'>
 				<p className='text-xl text-red-500 font-bold cursor-pointer' onClick={closeModalButtonHandler}>x</p>
 			</div>
@@ -113,7 +114,7 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={userLocation.lng}
 						readOnly
-	
+
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -124,7 +125,7 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={username}
 						readOnly
-						
+
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
@@ -135,8 +136,8 @@ export default function ModalForm(props) {
 						className="p-2 outline-none bg-app-grey-2"
 						value={`${locationAddress}`}
 						readOnly
-						onChange={(event) => 
-							{setLocationAddress(event.target.value)
+						onChange={(event) => {
+							setLocationAddress(event.target.value)
 						}}
 					/>
 				</div>
@@ -146,21 +147,22 @@ export default function ModalForm(props) {
 						type="number"
 						id="temperature"
 						className="p-2 outline-none bg-app-grey-2"
-						onChange={(event) => 
-							{setTemperature(event.target.value)
+						onChange={(event) => {
+							setTemperature(event.target.value)
 						}}
 					/>
 				</div>
 				<div className="flex flex-col w-full gap-3">
 					<label htmlFor="location">Weather Situation</label>
 					<select className='bg-app-grey p-3' name="condition" id="condition"
-						onChange={(event)=>{
-						setWeather(event.target.value)}}
+						onChange={(event) => {
+							setWeather(event.target.value)
+						}}
 					>
 						<option>--Pilih Cuaca--</option>
 						<option value="clear">Clear</option>
 						<option value="cloudy">Cloudy</option>
-						<option value="light_rain">Light Rain</option>					
+						<option value="light_rain">Light Rain</option>
 						<option value="heavy_rain">Heavy Rain</option>
 						<option value="storm">Storm</option>
 					</select>
@@ -168,7 +170,6 @@ export default function ModalForm(props) {
 				<div className="flex flex-col gap-3 w-full items-center">
 					<button
 						className="w-full p-3 bg-app-black text-white font-bold text-center mt-6 cursor-pointer"
-						role="button"
 						aria-label="Sign In"
 						onClick={createReport}>
 						Report Situation

@@ -70,7 +70,7 @@ export default function Dashboard() {
       <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
         <section className="w-full flex flex-col gap-5">
           <WeatherInfo geocode={Geocode} lat={center.lat} lng={center.lng}></WeatherInfo>
-          <AppMap lat={center.lat} lng={center.lng} isMarkerShown></AppMap>
+          <AppMap lat={center.lat} lng={center.lng} data={info} isMarkerShown></AppMap>
         </section>
         <section className="w-full bg-app-lime">
           <div className="section-header bg-app-grey w-full flex flex-col items-center p-4">

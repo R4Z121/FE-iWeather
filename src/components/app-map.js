@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, OverlayView } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
@@ -8,6 +8,16 @@ const containerStyle = {
 };
 
 function AppMap(props) {
+  const [centerOverlay, setCenterOverlay] = useState([]);
+  const data = props.data;
+  useEffect(() => {
+    if (centerOverlay.length > 0) {
+      setCenterOverlay(data.map(info => {
+        console.log(info);
+        return { lat: info.lat, lng: info.lng }
+      }));
+    }
+  }, [centerOverlay]);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0"
@@ -41,6 +51,19 @@ function AppMap(props) {
         onUnmount={onUnmount}
       >
         {props.isMarkerShown && <Marker position={{ lat: props.lat, lng: props.lng }} />}
+        {
+          centerOverlay.map(info => {
+            console.log(info);
+            return <OverlayView
+              key={Math.random()}
+              position={{ lat: info.latitude, lng: info.longtitude }}
+              mapPaneName={OverlayView.OVERLAY_LAYER}>
+              <div className='bg-app-black'>
+                <img className='w-12 h-12' src={`${process.env.PUBLIC_URL}/img/${info.weather}.png`} alt="" />
+              </div>
+            </OverlayView>
+          })
+        }
       </GoogleMap>
     </div>
   ) : <></>

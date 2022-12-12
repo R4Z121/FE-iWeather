@@ -18,7 +18,7 @@ export default function WeatherCard(props) {
             </span>{" "}
             | <span className="text-sm">{info.weather.split('_').map(word => word[0].toUpperCase() + word.substring(1)).join(' ')}</span>
           </h1>
-          <p className="text-sm">{info.address}</p>
+          <p className="text-sm">{info.locationAddr}</p>
         </div>
       </div>
       <div className="w-full flex flex-col gap-1">

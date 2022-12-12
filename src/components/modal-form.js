@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Geocode from "react-geocode";
 import { db } from "../firebase-config";
 import { collection, addDoc } from "@firebase/firestore";
+import { useNavigate } from "react-router-dom";
 // import { async } from '@firebase/util';
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
@@ -58,6 +59,7 @@ export default function ModalForm(props) {
 		setReportedTime(jam);
 	}
 
+	const navigate = useNavigate();
 	const createReport = async () => {
 		await addDoc(usersCollectionRef, {
 			username: username,
@@ -70,7 +72,7 @@ export default function ModalForm(props) {
 			reportedDate: reportedDate,
 			reportedTime: reportedTime
 		})
-
+		navigate("/");
 		//console.log(username, userId, locationAddress, latitude, longtitude, temperature, weather, reportedDate, reportedTime);
 	}
 

@@ -28,10 +28,7 @@ export default function Dashboard() {
     return users;
   };
 
-  useEffect(() => {
-    getUsers();
-  });
-  //done here
+  getUsers();
 
   const userContext = useContext(UserContext);
   const navigate = useNavigate();

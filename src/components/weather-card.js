@@ -1,7 +1,16 @@
 /* eslint-disable no-unused-vars */
+import { collection, deleteDoc, doc } from "firebase/firestore";
 import React from "react";
+import { db } from "../firebase-config";
 
 export default function WeatherCard(props) {
+  const usersCollectionRef = collection(db, "weather-report");
+
+  const deleteData = async (id) => {
+    const userDoc = doc(db, "weather-report", id);
+    await deleteDoc(userDoc);
+  }
+
   const info = props.info;
   return (
     <div id="card" className="flex flex-col p-3 bg-app-black text-white gap-5">
@@ -26,7 +35,7 @@ export default function WeatherCard(props) {
         <p className="text-sm">At {info.reportedDate} | {info.reportedTime}</p>
       </div>
       <div className={`w-full p-2 ${props.isDeleteEnabled ? 'flex' : 'hidden'} justify-end gap-2`}>
-        <span className="p-2 rounded-md bg-red-600 text-white" role='button'>Delete</span>
+        <button className="p-2 rounded-md bg-red-600 text-white" role='button' onClick={ (event) => { deleteData(props.id); } }>Delete</button>
       </div>
     </div>
   );

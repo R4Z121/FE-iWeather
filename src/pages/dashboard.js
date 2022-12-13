@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth";
 import Geocode from "react-geocode";
 import { db } from "../firebase-config";
-import { collection, getDocs } from "@firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "@firebase/firestore";
 
 Geocode.setApiKey("AIzaSyBvqILfEOQhJNbBfabJSDgE1vfT-fFBvU0");
 Geocode.setLanguage("id");
@@ -19,16 +19,18 @@ export default function Dashboard() {
 
   //start here
   const [info, setInformation] = useState([]);
-  const usersCollectionRef = collection(db, "weather-report");
 
-  const getUsers = async () => {
-    const data = await getDocs(usersCollectionRef);
-    const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    setInformation(users);
-    return users;
-  };
-
-  getUsers();
+  // const q = query(citiesRef, orderBy("name"), limit(3));
+  useEffect(() => {
+    const usersCollectionRef = collection(db, "weather-report");
+    const getUsers = async () => {
+      const data = await getDocs(query(usersCollectionRef, orderBy("reportedTime", "desc"), limit(4)));
+      const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setInformation(users);
+      return users;
+    };
+    getUsers();
+  }, [])
 
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
@@ -56,7 +58,6 @@ export default function Dashboard() {
       },
       (error) => {
         alert('Lokasi tidak ditemukan');
-        getUserPosition();
       }
     );
   }
@@ -65,7 +66,7 @@ export default function Dashboard() {
     <React.Fragment>
       <AppBar searchHandler={searchLocation} isSearchBarShown></AppBar>
       <main className="w-full grid grid-cols-1 p-3 pb-8 gap-8 md:grid md:grid-cols-2 lg:p-8">
-        <section className="w-full flex flex-col gap-5">
+        <section className="w-full flex flex-col gap-5 min-h-30">
           <WeatherInfo geocode={Geocode} lat={center.lat} lng={center.lng}></WeatherInfo>
           <AppMap lat={center.lat} lng={center.lng} data={info} isMarkerShown></AppMap>
         </section>

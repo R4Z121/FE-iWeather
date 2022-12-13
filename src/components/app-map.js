@@ -8,7 +8,6 @@ const containerStyle = {
 };
 
 function AppMap(props) {
-  const [centerOverlay, setCenterOverlay] = useState([]);
   const data = props.data;
 
   const { isLoaded } = useJsApiLoader({
@@ -44,7 +43,7 @@ function AppMap(props) {
         onUnmount={onUnmount}
       >
         {props.isMarkerShown && <Marker position={{ lat: props.lat, lng: props.lng }} />}
-        {/* {
+        {
           data.map(info => {
             return <OverlayView
               key={Math.random()}
@@ -55,7 +54,7 @@ function AppMap(props) {
               </div>
             </OverlayView>
           })
-        } */}
+        }
       </GoogleMap>
     </div>
   ) : <></>

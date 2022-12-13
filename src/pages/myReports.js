@@ -1,4 +1,5 @@
-import { collection, getDocs } from "firebase/firestore";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { collection, getDocs, query, orderBy, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import AppBar from '../components/app-bar';
 import AppFooter from '../components/app-footer';
@@ -11,8 +12,11 @@ export default function MyReports() {
   const [isModalShown, setIsModalShown] = useState(false);
   const usersCollectionRef = collection(db, "weather-report");
 
+  //get reports from user with userID = userID in localStorage
+  const { id: userId } = JSON.parse(localStorage.getItem('user'));
+
   const getUsers = async () => {
-    const data = await getDocs(usersCollectionRef);
+    const data = await getDocs(query(usersCollectionRef, where("userId", "==", `${userId}`), orderBy("reportedTime", "desc")));
     const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     setInformation(users);
     return users;
@@ -20,12 +24,7 @@ export default function MyReports() {
 
   useEffect(() => {
     getUsers();
-  });
-  //done here
-
-  //get reports from user with userID = userID in localStorage
-  const { id: userId } = JSON.parse(localStorage.getItem('user'));
-  
+  }, []);
 
   const addButtonClickHandler = () => {
     setIsModalShown(true);
@@ -42,8 +41,8 @@ export default function MyReports() {
           <h1 className='text-2xl font-bold '>My Reports</h1>
           <span className='p-2 bg-app-black text-white rounded-md cursor-pointer' role='button' tabIndex='0' aria-label='active form modal' onClick={addButtonClickHandler}>Add Report</span>
         </section>
-        <section className='p-3 w-full grid grid-cols-3'>
-          { info.map((data, index) => <WeatherCard key={ index } info={ data } id={ data.id } isDeleteEnabled></WeatherCard>) }
+        <section className='p-3 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+          {info.map((data, index) => <WeatherCard key={index} info={data} id={data.id} isDeleteEnabled></WeatherCard>)}
         </section>
       </main>
       <AppFooter></AppFooter>
